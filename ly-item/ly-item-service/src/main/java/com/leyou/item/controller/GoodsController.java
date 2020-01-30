@@ -1,26 +1,28 @@
 package com.leyou.item.controller;
 
 import com.leyou.common.vo.PageResult;
+import com.leyou.item.pojo.Sku;
+import com.leyou.item.pojo.SpuDetail;
 import com.leyou.item.service.GoodsService;
 import com.leyou.item.pojo.Spu;
+import com.netflix.ribbon.proxy.annotation.Http;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author leoso
  * @create 2020-01-06 12:47
  */
 @RestController
-@RequestMapping("/spu")
 public class GoodsController {
     @Autowired
     private GoodsService goodsService;
 
-    @GetMapping("/page")
+    @GetMapping("/spu/page")
     public ResponseEntity<PageResult<Spu>> querySpuByPage(
             @RequestParam(value="page",defaultValue="1") Integer page,
             @RequestParam(value="rows",defaultValue = "5") Integer rowsPerPage,
@@ -29,5 +31,28 @@ public class GoodsController {
     ){
         PageResult<Spu> pageResult = goodsService.querySpuByPage(page,rowsPerPage,key,saleable);
         return ResponseEntity.ok(pageResult);
+    }
+
+    @PostMapping("/goods")
+    public ResponseEntity<Void> saveGoods(@RequestBody Spu spu){
+       goodsService.saveGoods(spu);
+       return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    //编辑商品的数据回显
+    @GetMapping("/spu/detail/{id}")
+    public ResponseEntity<SpuDetail> querySpuDetailBySpuId(@PathVariable("id") Long id){
+        return ResponseEntity.ok(goodsService.querySpuDetailBySpuId(id));
+    }
+
+    @GetMapping("/sku/list")
+    public ResponseEntity<List<Sku>> querySkusBySpuId(@RequestParam("id") Long id){
+        return ResponseEntity.ok(goodsService.querySkusBySpuId(id));
+    }
+
+    @PutMapping("/goods")
+    public ResponseEntity<Void> updateGoods(@RequestBody Spu spu){
+        goodsService.updateGoods(spu);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

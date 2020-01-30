@@ -26,7 +26,11 @@ public enum ExceptionEnum {
     BRAND_DELETE_ERROR(500,"品牌删除失败"),
     SPEC_GROUP_DELETE_ERROR(500,"规格组删除失败"),
     INVALID_IMAGE_TYPE(500,"非法的文件类型"),
-    IMAGE_UPLOAD_ERROR(500,"图片上传失败")
+    IMAGE_UPLOAD_ERROR(500,"图片上传失败"),
+    GOODS_SAVE_ERROR(500,"商品添加失败"),
+    GOODS_SPUDETAIL_NOT_FOUND(500,"商品详情找不到"),
+    GOODS_SKU_NOT_FOUND(500,"商品SKU找不到"),
+    GOODS_STOCK_NOT_FOUND(500,"商品库存找不到"),
         ;
     private int code;
     private String message;

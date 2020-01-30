@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author leoso
@@ -36,4 +37,8 @@ public class Spu {
     private String cname;//页面的商品分类
     @Transient
     private String bname;//页面的品牌
+    @Transient
+    private List<Sku> skus;
+    @Transient
+    private SpuDetail spuDetail;
 }

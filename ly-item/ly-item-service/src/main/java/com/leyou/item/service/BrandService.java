@@ -104,4 +104,8 @@ public class BrandService {
         }
         return brand;
     }
+
+    public List<Brand> queryBrandByCid(Long cid) {
+        return brandMapper.queryBrandByCid(cid);
+    }
 }
