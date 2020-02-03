@@ -98,6 +98,7 @@ public class GoodsService {
         saveSkuAndStock(spu.getSkus(),spu.getId());
     }
 
+    @Transactional
     public void saveSkuAndStock(List<Sku> skus,Long spuId){
         List<Stock> stockList = new ArrayList<>();
         for(Sku sku : skus){
@@ -175,7 +176,7 @@ public class GoodsService {
             skuMapper.delete(sku);
         }
         //新增sku与stock
-        saveSkuAndStock(skuList,spu.getId());
+        saveSkuAndStock(spu.getSkus(),spu.getId());
         //更新spu
         //防止乱修改，设为null，这样就继承原先的值
         spu.setLastUpdateTime(new Date());

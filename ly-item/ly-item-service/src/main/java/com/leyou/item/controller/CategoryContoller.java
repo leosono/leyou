@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.ws.Response;
 import java.util.List;
 
 /**
@@ -30,5 +29,11 @@ public class CategoryContoller {
     public ResponseEntity<List<Category>> queryByBrandId(@PathVariable("bid") Long bid){
         List<Category> categories = categoryService.queryByBrandId(bid);
         return ResponseEntity.ok(categories);
+    }
+
+    //搜索服务_根据cids查询分类名称
+    @GetMapping("/list/ids")
+    public ResponseEntity<List<Category>> queryCategoryByIds(@RequestParam("ids") List<Long> ids){
+        return ResponseEntity.ok(categoryService.queryByIds(ids));
     }
 }
