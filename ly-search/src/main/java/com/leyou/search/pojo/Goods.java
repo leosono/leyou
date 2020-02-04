@@ -1,5 +1,6 @@
 package com.leyou.search.pojo;
 
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
@@ -10,6 +11,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Document(indexName = "goods", type = "docs", shards = 1, replicas = 0)
+@Data
 public class Goods {
     @Id
     private Long id; // spuId
@@ -29,5 +31,6 @@ public class Goods {
     @Field(type = FieldType.Keyword, index = false)
     private String skus;// sku信息的json结构
 
+    //用于搜索
     private Map<String, Object> specs;// 可搜索的规格参数，key是参数名，值是参数值
 }
