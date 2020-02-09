@@ -22,6 +22,7 @@ zuul:
       path: /upload/**
       serviceId: upload-service
       strip-prefix: false
+    search-service: /search/**
 
 ribbon:
   ConnectTimeout: 1000 # 连接超时时间(ms)

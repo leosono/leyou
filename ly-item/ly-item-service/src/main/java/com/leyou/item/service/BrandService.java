@@ -1,6 +1,5 @@
 package com.leyou.item.service;
 
-import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.leyou.common.enums.ExceptionEnum;
@@ -8,9 +7,9 @@ import com.leyou.common.exception.LyException;
 import com.leyou.common.vo.PageResult;
 import com.leyou.item.mapper.BrandMapper;
 import com.leyou.item.pojo.Brand;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.apache.commons.lang3.*;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
@@ -107,5 +106,9 @@ public class BrandService {
 
     public List<Brand> queryBrandByCid(Long cid) {
         return brandMapper.queryBrandByCid(cid);
+    }
+
+    public List<Brand> queryBrandByIds(List<Long> ids) {
+        return brandMapper.selectByIdList(ids);
     }
 }

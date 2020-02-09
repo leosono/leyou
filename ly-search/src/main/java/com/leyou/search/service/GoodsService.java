@@ -44,6 +44,7 @@ public class GoodsService {
             Map<String,Object> skuMap = new HashMap<>();
             skuMap.put("id", sku.getId());
             skuMap.put("title", sku.getTitle());
+            skuMap.put("price",sku.getPrice());
             skuMap.put("image", StringUtils.substringBefore(sku.getImages(), ","));
             skus.add(skuMap);
             priceSet.add(sku.getPrice());
@@ -72,6 +73,7 @@ public class GoodsService {
                 if(specParam.getNumeric()){
                     value = chooseSegment(genericSpec.get(specParam.getId()), specParam);
                 }
+                value = genericSpec.get(specParam.getId());
             }else{
                 value = specialSpec.get(specParam.getId());
             }
@@ -82,8 +84,8 @@ public class GoodsService {
         Goods goods = new Goods();
         goods.setBrandId(spu.getBrandId());
         goods.setCid1(spu.getCid1());
-        goods.setCid1(spu.getCid2());
-        goods.setCid1(spu.getCid3());
+        goods.setCid2(spu.getCid2());
+        goods.setCid3(spu.getCid3());
         goods.setCreateTime(spu.getCreateTime());
         goods.setId(spu.getId());
         goods.setSubTitle(spu.getSubTitle());

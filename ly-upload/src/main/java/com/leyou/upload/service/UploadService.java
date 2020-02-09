@@ -5,7 +5,6 @@ import com.github.tobato.fastdfs.service.FastFileStorageClient;
 import com.leyou.common.enums.ExceptionEnum;
 import com.leyou.common.exception.LyException;
 import com.leyou.upload.config.UploadProperties;
-import com.netflix.discovery.converters.Auto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +14,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * @author leoso
@@ -55,6 +51,7 @@ public class UploadService {
                     extension, null);
             /*File destFile = new File("D:\\leyou\\upload",file.getOriginalFilename());
             file.transferTo(destFile);*/
+            System.out.println(storePath.getFullPath());
             return prop.getBaseUrl()+storePath.getFullPath();
         }catch(IOException e){
             log.error("[上传失败] 图片上传失败");
