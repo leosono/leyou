@@ -12,6 +12,7 @@ import com.leyou.search.pojo.GoodsRepository;
 import com.leyou.search.pojo.SearchRequest;
 import com.leyou.search.pojo.SearchResult;
 import org.apache.commons.lang3.StringUtils;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.Operator;
 import org.elasticsearch.index.query.QueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
@@ -61,7 +62,7 @@ public class SearchService {
         nativeSearchQueryBuilder.withPageable
                 (PageRequest.of(searchRequest.getPage()-1,searchRequest.getSize()));
         //过滤
-        QueryBuilder basicQuery = QueryBuilders.matchQuery("all", key).operator(Operator.AND);
+        QueryBuilder basicQuery = buildBasicQuery(searchRequest);
         nativeSearchQueryBuilder.withQuery(basicQuery);
         //对分类和品牌聚合
         String categoryAggName = "categoryAgg";
@@ -90,11 +91,29 @@ public class SearchService {
                 (total, totalPage, content, categoryList,brandList,specs);
     }
 
+    //构建基本查询对象(搜索过滤)
+    public QueryBuilder buildBasicQuery(SearchRequest searchRequest){
+        BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+        boolQueryBuilder.must(QueryBuilders.matchQuery("all",searchRequest.getKey()).operator(Operator.AND));
+        Map<String, String> filter = searchRequest.getFilter();
+        for(Map.Entry<String,String> entry:filter.entrySet()){
+            String key = entry.getKey();
+            String value = entry.getValue();
+            //如果key是品牌或分类，前台发送过来的不是key的名称，而是cid3和brandId
+            if(!"cid3".equals(key) && !"brandId".equals(key)){
+                key = "specs."+key+".keyword";
+            }
+            boolQueryBuilder.filter(QueryBuilders.termQuery(key,value));
+        }
+        return boolQueryBuilder;
+    }
+
     //解析品牌聚合结果
     public List<Category> parseCategoryAgg(LongTerms agg){
         List<LongTerms.Bucket> buckets = agg.getBuckets();
         List<Long> ids = buckets.stream().map(b -> b.getKeyAsNumber().longValue())
                 .collect(Collectors.toList());
+        System.out.println(ids+"-----------------------------------");
         List<Category> categories = categoryClient.queryCategoryByIds(ids);
         return categories;
     }
