@@ -53,4 +53,11 @@ public class SpecificationController {
             @RequestParam(value="searching",required = false) Boolean searching){
         return ResponseEntity.ok(specificationService.queryParamList(gid,cid,searching));
     }
+
+    //查找规格组和规格参数
+    @GetMapping("/specification")
+    public ResponseEntity<List<SpecGroup>> querySpecificationList(@RequestParam("cid") Long cid){
+        return ResponseEntity.ok(specificationService.querySpecificationList(cid));
+    }
 }
+

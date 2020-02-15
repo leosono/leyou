@@ -10,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author leoso
@@ -66,5 +69,21 @@ public class SpecificationService {
             throw new LyException(ExceptionEnum.SPEC_PARAM_NOT_FOUND);
         }
         return list;
+    }
+
+    public List<SpecGroup> querySpecificationList(Long cid) {
+        List<SpecGroup> specGroups = queryGroupByCid(cid);
+        List<SpecParam> specParams = queryParamList(null, cid, null);
+        Map<Long,List<SpecParam>> map = new HashMap<>();
+        for(SpecParam specParam : specParams){
+            if(!map.containsKey(specParam.getGroupId())){
+                map.put(specParam.getGroupId(),new ArrayList<>());
+            }
+            map.get(specParam.getGroupId()).add(specParam);
+        }
+        for(SpecGroup specGroup : specGroups){
+            specGroup.setParams(map.get(specGroup.getId()));
+        }
+        return specGroups;
     }
 }

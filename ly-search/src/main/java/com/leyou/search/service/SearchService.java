@@ -4,8 +4,10 @@ import com.leyou.common.vo.PageResult;
 import com.leyou.item.pojo.Brand;
 import com.leyou.item.pojo.Category;
 import com.leyou.item.pojo.SpecParam;
+import com.leyou.item.pojo.Spu;
 import com.leyou.search.client.BrandClient;
 import com.leyou.search.client.CategoryClient;
+import com.leyou.search.client.GoodsClient;
 import com.leyou.search.client.SpecificationClient;
 import com.leyou.search.pojo.Goods;
 import com.leyou.search.pojo.GoodsRepository;
@@ -47,6 +49,10 @@ public class SearchService {
     private BrandClient brandClient;
     @Autowired
     private SpecificationClient specificationClient;
+    @Autowired
+    private GoodsService goodsService;
+    @Autowired
+    private GoodsClient goodsClient;
 
     public PageResult<Goods> search(SearchRequest searchRequest) {
         String key = searchRequest.getKey();
@@ -113,7 +119,6 @@ public class SearchService {
         List<LongTerms.Bucket> buckets = agg.getBuckets();
         List<Long> ids = buckets.stream().map(b -> b.getKeyAsNumber().longValue())
                 .collect(Collectors.toList());
-        System.out.println(ids+"-----------------------------------");
         List<Category> categories = categoryClient.queryCategoryByIds(ids);
         return categories;
     }
@@ -153,5 +158,13 @@ public class SearchService {
             specs.add(map);
         }
         return specs;
+    }
+
+    public void insertOrUpdateIndex(Long spuId) {
+        Spu spu = goodsClient.querySpuById(spuId);
+        //构建Goods
+        Goods goods = goodsService.buildGoods(spu);
+        //存入索引库
+        goodsRepository.save(goods);
     }
 }

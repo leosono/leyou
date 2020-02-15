@@ -31,6 +31,7 @@ public enum ExceptionEnum {
     GOODS_SPUDETAIL_NOT_FOUND(500,"商品详情找不到"),
     GOODS_SKU_NOT_FOUND(500,"商品SKU找不到"),
     GOODS_STOCK_NOT_FOUND(500,"商品库存找不到"),
+    GOODS_SPU_NOT_FOUND(500,"商品SPU找不到");
         ;
     private int code;
     private String message;

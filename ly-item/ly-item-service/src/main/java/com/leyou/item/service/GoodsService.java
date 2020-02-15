@@ -10,14 +10,15 @@ import com.leyou.item.mapper.SpuDetailMapper;
 import com.leyou.item.mapper.SpuMapper;
 import com.leyou.item.mapper.StockMapper;
 import com.leyou.item.pojo.*;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * @create 2020-01-06 12:47
  */
 @Service
+@Slf4j
 public class GoodsService {
     @Autowired
     private SpuMapper spuMapper;
@@ -39,6 +41,8 @@ public class GoodsService {
     private SkuMapper skuMapper;
     @Autowired
     private StockMapper stockMapper;
+    @Autowired
+    private AmqpTemplate amqpTemplate;
 
     @Transactional
     public PageResult<Spu> querySpuByPage(Integer page, Integer rowsPerPage, String key, Boolean saleable) {
@@ -96,6 +100,9 @@ public class GoodsService {
         }
         //保存sku和stock
         saveSkuAndStock(spu.getSkus(),spu.getId());
+
+        //通知其他微服务
+        sendMessage("insert",spu.getId());
     }
 
     @Transactional
@@ -186,5 +193,29 @@ public class GoodsService {
         spuMapper.updateByPrimaryKeySelective(spu);
         //更新spuDetail
         spuDetailMapper.updateByPrimaryKeySelective(spu.getSpuDetail());
+
+        //发送消息
+        sendMessage("update",spu.getId());
+    }
+
+    public Spu querySpuById(Long id) {
+        Spu spu = spuMapper.selectByPrimaryKey(id);
+        if(spu==null){
+            throw new LyException(ExceptionEnum.GOODS_SPU_NOT_FOUND);
+        }
+        List<Sku> skus = querySkusBySpuId(id);
+        spu.setSkus(skus);
+        SpuDetail spuDetail = querySpuDetailBySpuId(id);
+        spu.setSpuDetail(spuDetail);
+        return spu;
+    }
+
+    //发送消息
+    public void sendMessage(String type,Long id){
+        try{
+            amqpTemplate.convertAndSend("item."+type, id);
+        }catch(Exception e){
+            log.error("{} 商品消息发送异常,商品id {}",type,id,e);
+        }
     }
 }

@@ -2,10 +2,9 @@ package com.leyou.item.controller;
 
 import com.leyou.common.vo.PageResult;
 import com.leyou.item.pojo.Sku;
+import com.leyou.item.pojo.Spu;
 import com.leyou.item.pojo.SpuDetail;
 import com.leyou.item.service.GoodsService;
-import com.leyou.item.pojo.Spu;
-import com.netflix.ribbon.proxy.annotation.Http;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,5 +53,11 @@ public class GoodsController {
     public ResponseEntity<Void> updateGoods(@RequestBody Spu spu){
         goodsService.updateGoods(spu);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    //根据spuId获取Spu
+    @GetMapping("/id")
+    public ResponseEntity<Spu> querySpuById(@RequestParam("id") Long id){
+        return ResponseEntity.ok(goodsService.querySpuById(id));
     }
 }
