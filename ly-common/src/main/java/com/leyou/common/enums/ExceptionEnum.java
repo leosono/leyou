@@ -29,9 +29,11 @@ public enum ExceptionEnum {
     IMAGE_UPLOAD_ERROR(500,"图片上传失败"),
     GOODS_SAVE_ERROR(500,"商品添加失败"),
     GOODS_SPUDETAIL_NOT_FOUND(500,"商品详情找不到"),
-    GOODS_SKU_NOT_FOUND(500,"商品SKU找不到"),
-    GOODS_STOCK_NOT_FOUND(500,"商品库存找不到"),
-    GOODS_SPU_NOT_FOUND(500,"商品SPU找不到");
+    GOODS_SKU_NOT_FOUND(400,"商品SKU找不到"),
+    GOODS_STOCK_NOT_FOUND(400,"商品库存找不到"),
+    GOODS_SPU_NOT_FOUND(400,"商品SPU找不到"),
+    INVALID_USER_DATA_TYPE(500,"非法的用户数据类型"),
+    INVALID_VERIFY_CODE(500,"验证码不正确");
         ;
     private int code;
     private String message;
