@@ -210,6 +210,34 @@ public class GoodsService {
         return spu;
     }
 
+    public Sku querySkuById(Long id){
+        Sku sku = skuMapper.selectByPrimaryKey(id);
+        if(sku==null){
+            throw new LyException(ExceptionEnum.GOODS_SKU_NOT_FOUND);
+        }
+        return sku;
+    }
+
+    //减库存
+    public void decreaseStock(Long skuId, Integer num) {
+       /* //会出现高并发下的线程安全问题
+        Stock stock = stockMapper.selectByPrimaryKey(skuId);
+        int stockCount = stock.getStock();
+        if(stockCount>=num){
+            Example example = new Example(Stock.class);
+            Example.Criteria criteria = example.createCriteria();
+            criteria.andEqualTo("sku_id",skuId);
+            Stock stock1 = new Stock();
+            stock1.setStock(stockCount-num);
+            stockMapper.updateByExampleSelective(stock1,example);
+        }*/
+
+        int count = stockMapper.decreaseStock(skuId, num);
+        if(count!=1){
+            throw new LyException(ExceptionEnum.STOCK_UPDATE_ERROR);
+        }
+    }
+
     //发送消息
     public void sendMessage(String type,Long id){
         try{

@@ -6,6 +6,7 @@ import com.leyou.item.pojo.Spu;
 import com.leyou.item.pojo.SpuDetail;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
@@ -28,4 +29,10 @@ public interface GoodsAPI {
 
     @GetMapping("/id")
     Spu querySpuById(@RequestParam("id") Long spuId);
+
+    @GetMapping("/sku/id")
+    Sku querySkuById(@RequestParam("id") Long id);
+
+    @PostMapping("/stock/decrease")
+    Void decreaseStock(@RequestParam("skuId") Long skuId , @RequestParam("num") Integer num);
 }

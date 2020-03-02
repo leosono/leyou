@@ -64,11 +64,24 @@ public class UserService {
         //加密密码
         String salt = NumberUtils.generateCode(4);
         user.setSalt(salt);
-        user.setPassword(salt+ DigestUtils.md5Digest(user.getPassword().getBytes()));
+        user.setPassword(salt+ DigestUtils.md5DigestAsHex(user.getPassword().getBytes()));
         user.setCreated(new Date());
         int count = userMapper.insert(user);
         if(count==1){
             stringRedisTemplate.delete(KEY_PREFIX+user.getPhone());
         }
+    }
+
+    public User queryUserByUsernameAndPwd(String username,String password) {
+        User record = new User();
+        record.setUsername(username);
+        User user = userMapper.selectOne(record);
+        if(user == null){
+            throw new LyException(ExceptionEnum.INVALID_USERNAME_PASSWORD);
+        }
+        if(!user.getPassword().equals(user.getSalt()+DigestUtils.md5DigestAsHex(password.getBytes()))){
+            throw new LyException(ExceptionEnum.INVALID_USERNAME_PASSWORD);
+        }
+        return user;
     }
 }

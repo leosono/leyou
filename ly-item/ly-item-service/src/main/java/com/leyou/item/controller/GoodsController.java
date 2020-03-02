@@ -60,4 +60,15 @@ public class GoodsController {
     public ResponseEntity<Spu> querySpuById(@RequestParam("id") Long id){
         return ResponseEntity.ok(goodsService.querySpuById(id));
     }
+
+    @GetMapping("/sku/id")
+    public ResponseEntity<Sku> querySkuById(@RequestParam("id") Long id){
+        return ResponseEntity.ok(goodsService.querySkuById(id));
+    }
+
+    @PostMapping("/stock/decrease")
+    public ResponseEntity<Void> decreaseStock(@RequestParam("skuId") Long skuId , @RequestParam("num") Integer num){
+        goodsService.decreaseStock(skuId,num);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
 }

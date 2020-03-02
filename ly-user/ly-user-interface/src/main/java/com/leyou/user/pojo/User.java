@@ -17,7 +17,7 @@ import java.util.Date;
 public class User {
     @Id
     @KeySql(useGeneratedKeys = true)
-    private Integer id;
+    private Long id;
     @NotEmpty(message = "用户名不能为空")
     @Length(min = 4, max = 32,message = "用户名不能小于4位或大于32位")
     private String username;
